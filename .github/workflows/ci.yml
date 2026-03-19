@@ -45,10 +45,10 @@ jobs:
         with:
           name: matrix-binary
           path: src
-          
+
       - name: Make binary executable
-      run: chmod +x src/matrix_variant9
-  
+        run: chmod +x src/matrix_variant9
+
       - name: Install dependencies
         run: |
           sudo apt-get update
@@ -73,9 +73,9 @@ jobs:
         with:
           name: matrix-binary
           path: src
-          
+
       - name: Make binary executable
-      run: chmod +x src/matrix_variant9
+        run: chmod +x src/matrix_variant9
 
       - name: Install dependencies
         run: |
