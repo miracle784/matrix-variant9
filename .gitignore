@@ -1,2 +1,4 @@
-matrix_variant9
+scr/matrix_variant9
 deb_pkg/
+*.deb
+matrix-variant9_1.0-1_amd64/

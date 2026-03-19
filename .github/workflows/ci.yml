@@ -1,0 +1,90 @@
+name: CI-Pipeline
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y g++ make dpkg-dev
+
+      - name: Make build script executable
+        run: chmod +x cicd/build.sh
+
+      - name: Build program
+        run: ./cicd/build.sh
+
+      - name: Upload binary artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: matrix-binary
+          path: src/matrix_variant9
+          retention-days: 7
+
+  test:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download binary artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: matrix-binary
+          path: src
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y g++ make
+
+      - name: Make test script executable
+        run: chmod +x cicd/test.sh
+
+      - name: Run tests
+        run: ./cicd/test.sh
+
+  package:
+    needs: test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download binary artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: matrix-binary
+          path: src
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y dpkg-dev
+
+      - name: Make package script executable
+        run: chmod +x cicd/package.sh
+
+      - name: Build deb package
+        run: ./cicd/package.sh
+
+      - name: Upload deb artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: matrix-deb
+          path: "*.deb"
+          retention-days: 7

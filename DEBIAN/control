@@ -1,0 +1,8 @@
+Package: matrix-variant9
+Version: 1.0-1
+Section: utils
+Priority: optional
+Architecture: amd64
+Depends: libc6, libstdc++6
+Maintainer: Ilya <o726b09@voenmeh.ru>
+Description: Matrix program variant9 with CI/CD on github act
